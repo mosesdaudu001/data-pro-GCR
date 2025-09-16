@@ -1,0 +1,419 @@
+{% extends "base.html" %}
+
+{% block title %}Data Analytics - CBL GRC Platform{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2><i class="fas fa-chart-line"></i> Advanced Analytics & AI Insights</h2>
+                <p class="text-muted">Predictive analytics, machine learning insights, and data visualization for GRC</p>
+            </div>
+            <div class="btn-group" role="group">
+                <button class="btn btn-outline-primary" onclick="refreshDashboard()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+                <button class="btn btn-outline-secondary" onclick="exportAnalytics()">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key Performance Indicators -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-gradient-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">85.2%</h4>
+                        <p class="card-text">Risk Coverage</p>
+                        <small>↑ 3.2% from last month</small>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-shield-alt fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-gradient-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">92.7%</h4>
+                        <p class="card-text">Compliance Score</p>
+                        <small>↑ 1.8% from last month</small>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-check-circle fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-gradient-warning text-dark">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">2.3 days</h4>
+                        <p class="card-text">Avg Response Time</p>
+                        <small>↓ 0.5 days improvement</small>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-clock fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card bg-gradient-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">15</h4>
+                        <p class="card-text">AI Predictions</p>
+                        <small>Active forecasts</small>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-brain fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analytics Charts Row -->
+<div class="row mb-4">
+    <!-- Risk Trend Analysis -->
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-chart-line"></i> Risk Trend Analysis</h5>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button class="btn btn-outline-primary active" onclick="updateChart('risk', '3m')">3M</button>
+                        <button class="btn btn-outline-primary" onclick="updateChart('risk', '6m')">6M</button>
+                        <button class="btn btn-outline-primary" onclick="updateChart('risk', '1y')">1Y</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="riskTrendChart"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Compliance Status -->
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-pie"></i> Compliance Status</h5>
+            </div>
+            <div class="card-body">
+                <div id="complianceChart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Insights and Predictions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="fas fa-robot"></i> AI-Powered Insights & Predictions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h6><i class="fas fa-exclamation-triangle text-warning"></i> Risk Predictions</h6>
+                        <div class="alert alert-warning" role="alert">
+                            <strong>High Risk Alert:</strong> Credit risk concentration predicted to increase by 15% in Q4 2024 based on current lending patterns.
+                            <hr>
+                            <small class="mb-0">
+                                <strong>Confidence:</strong> 87% | 
+                                <strong>Impact:</strong> High | 
+                                <strong>Recommended Action:</strong> Optimize FX position
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <h6><i class="fas fa-check-circle text-success"></i> Compliance Insights</h6>
+                        <div class="alert alert-success" role="alert">
+                            <strong>Positive Trend:</strong> AML transaction monitoring effectiveness improved by 23% with new ML models.
+                            <hr>
+                            <small class="mb-0">
+                                <strong>Impact:</strong> Reduced false positives by 35% | 
+                                <strong>Action:</strong> Continue current approach
+                            </small>
+                        </div>
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Compliance Gap:</strong> GDPR data retention policies need attention for 3 legacy systems.
+                            <hr>
+                            <small class="mb-0">
+                                <strong>Deadline:</strong> 45 days | 
+                                <strong>Priority:</strong> High | 
+                                <strong>Owner:</strong> Data Protection Officer
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data Sources and Quality -->
+<div class="row mb-4">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-database"></i> Data Sources & Quality</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Data Source</th>
+                                <th>Status</th>
+                                <th>Quality</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="fas fa-university text-primary"></i> Core Banking System</td>
+                                <td><span class="badge bg-success">Online</span></td>
+                                <td><span class="badge bg-success">98.5%</span></td>
+                                <td>2 mins ago</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-chart-line text-info"></i> Market Data Feed</td>
+                                <td><span class="badge bg-success">Online</span></td>
+                                <td><span class="badge bg-success">99.2%</span></td>
+                                <td>1 min ago</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-shield-alt text-warning"></i> Risk Management System</td>
+                                <td><span class="badge bg-warning">Delayed</span></td>
+                                <td><span class="badge bg-warning">95.1%</span></td>
+                                <td>15 mins ago</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-file-alt text-secondary"></i> Regulatory Filings</td>
+                                <td><span class="badge bg-success">Online</span></td>
+                                <td><span class="badge bg-success">97.8%</span></td>
+                                <td>5 mins ago</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-bell"></i> Real-time Alerts</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold text-danger">High Risk Alert</div>
+                            Credit concentration limit exceeded
+                        </div>
+                        <small class="text-muted">2 mins ago</small>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold text-warning">Data Quality Issue</div>
+                            Missing transaction records detected
+                        </div>
+                        <small class="text-muted">8 mins ago</small>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold text-info">Model Update</div>
+                            AML scoring model retrained
+                        </div>
+                        <small class="text-muted">1 hour ago</small>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold text-success">Compliance Update</div>
+                            Basel III report generated successfully
+                        </div>
+                        <small class="text-muted">2 hours ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Advanced Analytics Tools -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-tools"></i> Advanced Analytics Tools</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-outline-primary" onclick="openTool('stress-testing')">
+                                <i class="fas fa-chart-area"></i><br>
+                                Stress Testing
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-outline-success" onclick="openTool('scenario-analysis')">
+                                <i class="fas fa-project-diagram"></i><br>
+                                Scenario Analysis
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-outline-warning" onclick="openTool('anomaly-detection')">
+                                <i class="fas fa-search"></i><br>
+                                Anomaly Detection
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-outline-info" onclick="openTool('predictive-modeling')">
+                                <i class="fas fa-brain"></i><br>
+                                Predictive Modeling
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Analytics Builder -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-cogs"></i> Custom Analytics Builder</h5>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#customAnalyticsModal">
+                        <i class="fas fa-plus"></i> Build Custom Analysis
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>Data Sources</h6>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="corebanking">
+                                    <label class="form-check-label" for="corebanking">Core Banking Data</label>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="riskdata">
+                                    <label class="form-check-label" for="riskdata">Risk Assessment Data</label>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="compliancedata">
+                                    <label class="form-check-label" for="compliancedata">Compliance Data</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Analysis Type</h6>
+                        <select class="form-select mb-3">
+                            <option>Correlation Analysis</option>
+                            <option>Trend Analysis</option>
+                            <option>Regression Analysis</option>
+                            <option>Classification</option>
+                            <option>Clustering</option>
+                        </select>
+                        <h6>Time Period</h6>
+                        <div class="input-group">
+                            <input type="date" class="form-control" value="2024-01-01">
+                            <span class="input-group-text">to</span>
+                            <input type="date" class="form-control" value="2024-10-15">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Visualization</h6>
+                        <select class="form-select mb-3">
+                            <option>Line Chart</option>
+                            <option>Bar Chart</option>
+                            <option>Heat Map</option>
+                            <option>Scatter Plot</option>
+                            <option>Dashboard</option>
+                        </select>
+                        <button class="btn btn-success w-100">
+                            <i class="fas fa-play"></i> Run Analysis
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Render charts
+// var riskTrendData = {{ risk_trend_chart|safe }};
+// Plotly.newPlot('riskTrendChart', riskTrendData.data, riskTrendData.layout);
+
+// var complianceStatusData = {{ compliance_status_chart|safe }};
+// Plotly.newPlot('complianceChart', complianceStatusData.data, complianceStatusData.layout);
+
+function refreshDashboard() {
+    location.reload();
+}
+
+function exportAnalytics() {
+    alert('Export analytics functionality would be implemented here');
+}
+
+function updateChart(type, period) {
+    alert('Update chart functionality for ' + type + ' with period ' + period + ' would be implemented here');
+}
+
+function openTool(toolName) {
+    alert('Advanced analytics tool: ' + toolName + ' would be opened here');
+}
+
+// Auto-refresh real-time data every 30 seconds
+setInterval(function() {
+    // In production, this would fetch real-time updates
+    console.log('Auto-refreshing real-time data...');
+}, 30000);
+</script>
+{% endblock %}</strong> Review lending policies

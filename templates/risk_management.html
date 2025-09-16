@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}Risk Management - CBL GRC Platform{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2><i class="fas fa-exclamation-triangle"></i> Risk Management</h2>
+                <p class="text-muted">Monitor and assess organizational risks across all categories</p>
+            </div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRiskModal">
+                <i class="fas fa-plus"></i> Add New Risk
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Risk Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body text-center">
+                <h4>Critical</h4>
+                <h2>{% set critical_count = risks|selectattr('5', 'ge', 20)|list|length %}{{ critical_count }}</h2>
+                <small>Score ≥ 20</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark">
+            <div class="card-body text-center">
+                <h4>High</h4>
+                <h2>{% set high_count = risks|selectattr('5', 'ge', 15)|selectattr('5', 'lt', 20)|list|length %}{{ high_count }}</h2>
+                <small>Score 15-19</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <h4>Medium</h4>
+                <h2>{% set medium_count = risks|selectattr('5', 'ge', 10)|selectattr('5', 'lt', 15)|list|length %}{{ medium_count }}</h2>
+                <small>Score 10-14</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <h4>Low</h4>
+                <h2>{% set low_count = risks|selectattr('5', 'lt', 10)|list|length %}{{ low_count }}</h2>
+                <small>Score < 10</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Risk Assessment Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-list"></i> Current Risk Assessments</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Risk Type</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Likelihood</th>
+                                <th>Impact</th>
+                                <th>Risk Score</th>
+                                <th>Status</th>
+                                <th>Owner</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for risk in risks %}
+                            <tr>
+                                <td>{{ risk[1] }}</td>
+                                <td>{{ risk[2] }}</td>
+                                <td>{{ risk[3][:50] }}{% if risk[3]|length > 50 %}...{% endif %}</td>
+                                <td>
+                                    <span class="badge bg-{% if risk[4] >= 4 %}danger{% elif risk[4] >= 3 %}warning{% else %}success{% endif %}">
+                                        {{ risk[4] }}/5
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{% if risk[5] >= 4 %}danger{% elif risk[5] >= 3 %}warning{% else %}success{% endif %}">
+                                        {{ risk[5] }}/5
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{% if risk[6] >= 20 %}danger{% elif risk[6] >= 15 %}warning{% elif risk[6] >= 10 %}info{% else %}success{% endif %} fs-6">
+                                        {{ risk[6] }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{% if risk[7] == 'Identified' %}danger{% elif risk[7] == 'In Progress' %}warning{% elif risk[7] == 'Monitored' %}info{% else %}success{% endif %}">
+                                        {{ risk[7] }}
+                                    </span>
+                                </td>
+                                <td>{{ risk[8] }}</td>
+                                <td>
+                                    <a href="{{ url_for('risk_analysis', risk_id=risk[0]) }}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye"></i> Analyze
+                                    </a>
+                                    <!-- <button class="btn btn-sm btn-secondary" onclick="editRisk({{ risk[0] }})">
+                                        <i class="fas fa-edit"></i>
+                                    </button> -->
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Risk Modal -->
+<div class="modal fade" id="addRiskModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus"></i> Add New Risk Assessment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Risk Type</label>
+                            <select class="form-select">
+                                <option>Credit Risk</option>
+                                <option>Market Risk</option>
+                                <option>Operational Risk</option>
+                                <option>Liquidity Risk</option>
+                                <option>Systemic Risk</option>
+                                <option>Compliance Risk</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Risk Category</label>
+                            <select class="form-select">
+                                <option>Financial</option>
+                                <option>Operational</option>
+                                <option>Strategic</option>
+                                <option>Regulatory</option>
+                                <option>Technology</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Risk Description</label>
+                        <textarea class="form-control" rows="3" placeholder="Describe the risk in detail..."></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Likelihood (1-5)</label>
+                            <select class="form-select">
+                                <option value="1">1 - Very Low</option>
+                                <option value="2">2 - Low</option>
+                                <option value="3">3 - Medium</option>
+                                <option value="4">4 - High</option>
+                                <option value="5">5 - Very High</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Impact (1-5)</label>
+                            <select class="form-select">
+                                <option value="1">1 - Very Low</option>
+                                <option value="2">2 - Low</option>
+                                <option value="3">3 - Medium</option>
+                                <option value="4">4 - High</option>
+                                <option value="5">5 - Very High</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Risk Owner</label>
+                            <input type="text" class="form-control" placeholder="Risk owner name">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Save Risk Assessment</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function editRisk(riskId) {
+    alert('Edit functionality would be implemented here for Risk ID: ' + riskId);
+}
+</script>
+{% endblock %}

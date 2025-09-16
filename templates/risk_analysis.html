@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}AI Risk Analysis - CBL GRC Platform{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2><i class="fas fa-brain"></i> AI-Powered Risk Analysis</h2>
+                <p class="text-muted">Advanced risk assessment using machine learning and natural language processing</p>
+            </div>
+            <a href="{{ url_for('risk_management') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Risk Management
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Risk Details Card -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="fas fa-info-circle"></i> Risk Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <th>Risk Type:</th>
+                                <td>{{ risk[1] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Category:</th>
+                                <td>{{ risk[2] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Description:</th>
+                                <td>{{ risk[3] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Risk Owner:</th>
+                                <td>{{ risk[8] }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <th>Likelihood:</th>
+                                <td>
+                                    <span class="badge bg-{% if risk[4] >= 4 %}danger{% elif risk[4] >= 3 %}warning{% else %}success{% endif %} fs-6">
+                                        {{ risk[4] }}/5
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Impact:</th>
+                                <td>
+                                    <span class="badge bg-{% if risk[5] >= 4 %}danger{% elif risk[5] >= 3 %}warning{% else %}success{% endif %} fs-6">
+                                        {{ risk[5] }}/5
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Risk Score:</th>
+                                <td>
+                                    <span class="badge bg-{% if risk[6] >= 20 %}danger{% elif risk[6] >= 15 %}warning{% elif risk[6] >= 10 %}info{% else %}success{% endif %} fs-6">
+                                        {{ risk[6] }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Status:</th>
+                                <td>
+                                    <span class="badge bg-{% if risk[7] == 'Identified' %}danger{% elif risk[7] == 'In Progress' %}warning{% elif risk[7] == 'Monitored' %}info{% else %}success{% endif %} fs-6">
+                                        {{ risk[7] }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Analysis Results -->
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5><i class="fas fa-robot"></i> AI Risk Assessment</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Severity Level:</strong>
+                    <span class="badge bg-{% if ai_analysis.severity_level == 'Critical' %}danger{% elif ai_analysis.severity_level == 'High' %}warning{% elif ai_analysis.severity_level == 'Medium' %}info{% else %}success{% endif %} ms-2">
+                        {{ ai_analysis.severity_level }}
+                    </span>
+                </div>
+                <p><strong>Assessment:</strong></p>
+                <p class="text-muted">{{ ai_analysis.risk_assessment }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5><i class="fas fa-lightbulb"></i> Mitigation Recommendations</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ ai_analysis.mitigation_recommendations }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5><i class="fas fa-eye"></i> Monitoring Strategy</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ ai_analysis.monitoring_strategy }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5><i class="fas fa-gavel"></i> Regulatory Considerations</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ ai_analysis.regulatory_considerations }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Items -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-tasks"></i> Recommended Action Items</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Priority</th>
+                                <th>Action</th>
+                                <th>Owner</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge bg-danger">High</span></td>
+                                <td>Implement enhanced monitoring controls</td>
+                                <td>{{ risk[8] }}</td>
+                                <td>{{ (moment().add(30, 'days')).format('YYYY-MM-DD') if moment else '2024-11-15' }}</td>
+                                <td><span class="badge bg-warning">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-warning">Medium</span></td>
+                                <td>Review and update risk assessment quarterly</td>
+                                <td>Risk Committee</td>
+                                <td>{{ (moment().add(90, 'days')).format('YYYY-MM-DD') if moment else '2024-12-15' }}</td>
+                                <td><span class="badge bg-info">Scheduled</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-info">Low</span></td>
+                                <td>Document lessons learned and best practices</td>
+                                <td>{{ risk[8] }}</td>
+                                <td>{{ (moment().add(60, 'days')).format('YYYY-MM-DD') if moment else '2024-12-01' }}</td>
+                                <td><span class="badge bg-secondary">Not Started</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Export and Share Options -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h6><i class="fas fa-share-alt"></i> Export & Share</h6>
+                <div class="btn-group" role="group">
+                    <button class="btn btn-outline-primary" onclick="exportToPDF()">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
+                    <button class="btn btn-outline-success" onclick="exportToExcel()">
+                        <i class="fas fa-file-excel"></i> Export Excel
+                    </button>
+                    <button class="btn btn-outline-info" onclick="shareAnalysis()">
+                        <i class="fas fa-share"></i> Share Analysis
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="scheduleReview()">
+                        <i class="fas fa-calendar"></i> Schedule Review
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function exportToPDF() {
+    alert('PDF export functionality would be implemented here');
+}
+
+function exportToExcel() {
+    alert('Excel export functionality would be implemented here');
+}
+
+function shareAnalysis() {
+    alert('Share analysis functionality would be implemented here');
+}
+
+function scheduleReview() {
+    alert('Schedule review functionality would be implemented here');
+}
+</script>
+{% endblock %}

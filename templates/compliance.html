@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block title %}Compliance Management - CBL GRC Platform{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2><i class="fas fa-check-circle"></i> Compliance Management</h2>
+                <p class="text-muted">Track regulatory compliance across Basel III, AML/CFT, IFRS 9, GDPR, and KYC obligations</p>
+            </div>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addComplianceModal">
+                <i class="fas fa-plus"></i> Add Compliance Item
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Compliance Status Overview -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <h4>Compliant</h4>
+                <h2>{% set compliant_count = compliance_items|selectattr('3', 'equalto', 'Compliant')|list|length %}{{ compliant_count }}</h2>
+                <small>Up to date</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark">
+            <div class="card-body text-center">
+                <h4>In Progress</h4>
+                <h2>{% set progress_count = compliance_items|selectattr('3', 'equalto', 'In Progress')|list|length %}{{ progress_count }}</h2>
+                <small>Being worked on</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body text-center">
+                <h4>Overdue</h4>
+                <h2>{% set overdue_count = compliance_items|selectattr('3', 'equalto', 'Overdue')|list|length %}{{ overdue_count }}</h2>
+                <small>Needs attention</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <h4>Total Items</h4>
+                <h2>{{ compliance_items|length }}</h2>
+                <small>All regulations</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Regulatory Framework Tabs -->
+<div class="row mb-4">
+    <div class="col-12">
+        <ul class="nav nav-tabs" id="regulationTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button">
+                    All Regulations
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="basel-tab" data-bs-toggle="tab" data-bs-target="#basel" type="button">
+                    Basel III
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="aml-tab" data-bs-toggle="tab" data-bs-target="#aml" type="button">
+                    AML/CFT
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="ifrs-tab" data-bs-toggle="tab" data-bs-target="#ifrs" type="button">
+                    IFRS 9
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="gdpr-tab" data-bs-toggle="tab" data-bs-target="#gdpr" type="button">
+                    GDPR
+                </button>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Compliance Items Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="tab-content" id="regulationTabContent">
+            <div class="tab-pane fade show active" id="all" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-list"></i> All Compliance Items</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Regulation</th>
+                                        <th>Requirement</th>
+                                        <th>Status</th>
+                                        <th>Due Date</th>
+                                        <th>Owner</th>
+                                        <th>Evidence</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in compliance_items %}
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-primary">{{ item[1] }}</span>
+                                        </td>
+                                        <td>{{ item[2] }}</td>
+                                        <td>
+                                            <span class="badge bg-{% if item[3] == 'Compliant' %}success{% elif item[3] == 'In Progress' %}warning{% elif item[3] == 'Overdue' %}danger{% else %}secondary{% endif %}">
+                                                {{ item[3] }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% set due_date = item[4] %}
+                                            {% if due_date < '2024-10-16' and item[3] != 'Compliant' %}
+                                                <span class="text-danger fw-bold">{{ due_date }}</span>
+                                            {% else %}
+                                                {{ due_date }}
+                                            {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Basel III Tab -->
+            <div class="tab-pane fade" id="basel" role="tabpanel">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5><i class="fas fa-university"></i> Basel III Compliance</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h6>Capital Adequacy Ratio</h6>
+                                        <h4 class="text-success">12.5%</h4>
+                                        <small class="text-muted">Minimum: 10.5%</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h6>Liquidity Coverage Ratio</h6>
+                                        <h4 class="text-success">105%</h4>
+                                        <small class="text-muted">Minimum: 100%</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h6>Leverage Ratio</h6>
+                                        <h4 class="text-warning">3.2%</h4>
+                                        <small class="text-muted">Minimum: 3%</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Requirement</th>
+                                        <th>Current Value</th>
+                                        <th>Target</th>
+                                        <th>Status</th>
+                                        <th>Next Review</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Common Equity Tier 1</td>
+                                        <td>8.2%</td>
+                                        <td>7%</td>
+                                        <td><span class="badge bg-success">Compliant</span></td>
+                                        <td>2024-12-31</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total Capital Ratio</td>
+                                        <td>12.5%</td>
+                                        <td>10.5%</td>
+                                        <td><span class="badge bg-success">Compliant</span></td>
+                                        <td>2024-12-31</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Net Stable Funding Ratio</td>
+                                        <td>98%</td>
+                                        <td>100%</td>
+                                        <td><span class="badge bg-warning">Monitor</span></td>
+                                        <td>2024-11-15</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Compliance Modal -->
+<div class="modal fade" id="addComplianceModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus"></i> Add Compliance Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Regulation</label>
+                            <select class="form-select">
+                                <option>Basel III</option>
+                                <option>AML/CFT</option>
+                                <option>IFRS 9</option>
+                                <option>GDPR</option>
+                                <option>KYC</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Due Date</label>
+                            <input type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Requirement Description</label>
+                        <textarea class="form-control" rows="3" placeholder="Describe the compliance requirement..."></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Responsible Owner</label>
+                            <input type="text" class="form-control" placeholder="Owner name">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Current Status</label>
+                            <select class="form-select">
+                                <option>Not Started</option>
+                                <option>In Progress</option>
+                                <option>Compliant</option>
+                                <option>Overdue</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Supporting Evidence/Documentation</label>
+                        <textarea class="form-control" rows="2" placeholder="Evidence or documentation details..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success">Save Compliance Item</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Regulatory Change Alert -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-info" role="alert">
+            <h5 class="alert-heading"><i class="fas fa-bell"></i> Regulatory Updates</h5>
+            <p>New Basel III guidelines effective January 2025. Review impact on capital requirements.</p>
+            <hr>
+            <p class="mb-0">
+                <a href="#" class="btn btn-info btn-sm">View Details</a>
+                <button class="btn btn-outline-info btn-sm ms-2">Mark as Reviewed</button>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function viewDetails(itemId) {
+    alert('View details functionality would be implemented here for Item ID: ' + itemId);
+}
+
+function updateStatus(itemId) {
+    alert('Update status functionality would be implemented here for Item ID: ' + itemId);
+}
+
+function uploadEvidence(itemId) {
+    alert('Upload evidence functionality would be implemented here for Item ID: ' + itemId);
+}
+</script>
+{% endblock %}dif %}

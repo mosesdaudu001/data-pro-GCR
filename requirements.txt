@@ -1,0 +1,16 @@
+Flask==2.3.3
+Flask-Login==0.6.3
+Flask-WTF==1.1.1
+WTForms==3.0.1
+Werkzeug==2.3.7
+google-generativeai==0.3.2
+python-dotenv==1.0.0
+# sqlite3
+pandas==2.1.1
+numpy==1.26.4
+plotly==5.17.0
+APScheduler==3.10.4
+
+
+vertexai
+google-genai
